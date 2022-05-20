@@ -1,10 +1,15 @@
 {
-    "mode": "active",
-     "replyToken": "e58ddeea713d4370996bc0144ddc60ac",
+    "message": {
+        "id": "16107115553003",
+         "text": "\uff08\u6162\u6162\u7684\u8d70\u4e86\u904e\u53bb\uff09",
+         "type": "text"
+    },
+     "mode": "active",
+     "replyToken": "b76fc0e9df4a489e9c6a864cffc7f2dd",
      "source": {
         "type": "user",
          "userId": "U6feaa10ddbb90decf621c4feb49e351c"
     },
-     "timestamp": 1652238348889,
-     "type": "follow"
+     "timestamp": 1652861384166,
+     "type": "message"
 }
