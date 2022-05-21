@@ -94,9 +94,26 @@ msg_pack=[
     ['（校慶當天）','哇，校園變了真多啊，不知道當年我們一起上課的教室現在在哪裡？'],
     ['',''],
     ['',''],
-    ['(抵達了教室)黃準：你怎麼現在才來？','我剛剛找教室找了好久']
+    ['(抵達了教室)','嗨～早啊好久不見'],
+    ['你怎麼又遲到了！畢業十年怎麼還是跟當初一樣','我我我......好喘'],
+    ['怎麼這麼喘，該不會睡過頭吧','沒有啦，～太久沒有回來學校，找教室花了億點時間。'],
+    ['好啦，我其實有幫你買好飲料（在你原本的座位底下，但是你應該是不記得了啦）','哇～貼心欸，大熱天有飲料～'],
+    ['但是不能這麼輕易讓你喝到，所以我簡單設計了一個小謎題，考考你吧','又來，好啦，我試試看啦'],
+    [
+    ['好啦找找你之前的座位吧，對了這是線索',
+     "以下是兩個人的對話內容：",
+     "A:我不知道這個座位",
+     "B:我早就知道你不知道，但是我也不知道",
+     "A:我現在知道這個座位了",
+     "B:我也知道了"
+    ],'嗯.....我思考一下'],
+    ['' '']
     
 ]
+
+'''
+「那個黃準又遲到了！畢業十年怎麼一點長進都沒有！」本來想說天氣炎熱，先幫他買了瓶飲料，既然如此，我就把飲料藏在他從前的位子裡面，就看他能不能自己找到吧！「謎題一」
+'''
 
 # pointer,try_times
 
@@ -111,7 +128,12 @@ def handle_message(event):
     try_times=times[user_id][1]
     times=times[user_id][0]
    
-    print(times)
+    try:
+        print(times)
+        print(times,msg_pack[times-1][1],msg,re.match(msg_pack[times-1][1],msg))
+    except:
+        pass
+    
     if re.match("開始遊戲",msg) and times==0:
         times=1
    
@@ -158,6 +180,12 @@ def handle_message(event):
         else:
             reply_packed(token,'（經過了二十分鐘，終於找到了那個教室）','（慢慢的走了過去）')
             times+=1
+    elif re.match(msg_pack[times-1][1],msg):
+        print(1)
+        reply_packed(token,msg_pack[times][0],msg_pack[times][1])
+        times+=1
+    
+    
     collection.update({"type":'user'},{"$set":{str(user_id):[times,try_times]}})
         
     
