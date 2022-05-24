@@ -1,0 +1,29 @@
+[
+    {
+        "sender": {"iconUrl": "", "name": "\u667a\u80fd\u52a9\u7406"},
+        "text": "123123123123", 
+        "type": "text"
+    }, 
+    {
+        "originalContentUrl": "https://i.imgur.com/UoeKg0E.jpg", 
+        "previewImageUrl": "https://i.imgur.com/UoeKg0E.jpg", 
+        "quickReply": {"items": [{"action": {"label": "\u9080\u8acb\u51fd\uff1f\u662f\u95dc\u65bc\u4ec0\u9ebc\u7684\uff1f", "text": "\u9080\u8acb\u51fd\uff1f\u662f\u95dc\u65bc\u4ec0\u9ebc\u7684\uff1f", "type": "message"}, "type": "action"}]}, 
+        "sender": {"iconUrl": "", "name": "\u667a\u80fd\u52a9\u7406"}, 
+        "type": "image"
+    }
+]
+
+
+[
+    {
+        "sender": {"iconUrl": "", "name": "\u667a\u80fd\u52a9\u7406"}, 
+        "text": "\u6210\u529f100\u5e74\u6821\u6176\u7684\u9080\u8acb\u51fd", 
+        "type": "text"
+    }, 
+    {
+        "originalContentUrl": "https://i.imgur.com/UoeKg0E.jpg", 
+        "previewImageUrl": "https://i.imgur.com/UoeKg0E.jpg", 
+        "sender": {"iconUrl": "", "name": "\u667a\u80fd\u52a9\u7406"}, 
+        "type": "image"
+    }
+]

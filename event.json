@@ -1,15 +1,10 @@
 {
-    "message": {
-        "id": "16125021516680",
-         "text": "\u54c7\uff0c\u6821\u5712\u8b8a\u4e86\u771f\u591a\u554a\uff0c\u4e0d\u77e5\u9053\u7576\u5e74\u6211\u5011\u4e00\u8d77\u4e0a\u8ab2\u7684\u6559\u5ba4\u73fe\u5728\u5728\u54ea\u88e1\uff1f",
-         "type": "text"
-    },
-     "mode": "active",
-     "replyToken": "189eb440eaf540bd9d4f091d84777cd1",
+    "mode": "active",
+     "replyToken": "4e64781696b54be6af67d4f0f2fcd1be",
      "source": {
         "type": "user",
-         "userId": "U6feaa10ddbb90decf621c4feb49e351c"
+         "userId": "U27fbb639b82c8d9f6a94386866ec51de"
     },
-     "timestamp": 1653129514353,
-     "type": "message"
+     "timestamp": 1653398190578,
+     "type": "follow"
 }
