@@ -105,5 +105,5 @@ msg_type={
     34:[],
     35:['text'],
     36:['text','text'],
-    37:['text','text','text','text'],
+    37:['text','text','text','text','img'],
 }
