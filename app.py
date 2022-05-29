@@ -115,8 +115,8 @@ def handle_follow(event):
     )
     line_bot_api.reply_message(
         event.reply_token,[
-        TextSendMessage(text="歡迎追蹤～～～～～～～",sender=sender['智能助理']),
-        TextSendMessage(text="準備好了嗎，請點擊  “開始遊戲”",sender=sender['智能助理']),
+        TextSendMessage(text="歡迎追蹤～～～～～～～\n須知:這是一場解謎，主要的劇情會通過和機器人互動的過程進行，然後故事中會穿插謎題。然後如果有出現提示回覆的內容，請點擊，不要亂回（可能會造成劇情無法繼續）！！！！！！！\n如果在遊玩的過程中發生問題，可以嘗試將機器人封鎖，再解除封鎖來嘗試觸發",sender=sender['智能助理']),
+        TextSendMessage(text="閱讀以上內容後，準備好，就請點擊  “開始遊戲” 享受這一場解密吧～～～",sender=sender['智能助理']),
         TemplateSendMessage(alt_text="err",template=button_template_message,sender=sender['智能助理'])]
     )
     
