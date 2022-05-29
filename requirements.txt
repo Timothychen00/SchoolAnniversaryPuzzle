@@ -2,3 +2,4 @@ line-bot-sdk==2.0.1
 Flask==2.0.3
 python-dotenv==0.20.0
 gevent
+pymongo[srv]==3.12.0
