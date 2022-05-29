@@ -19,11 +19,13 @@ handler = WebhookHandler(os.environ['Channel_secret'])
 
 sender={
     '智能助理':Sender(name='智能助理',icon_url=image_src['智能助理']),
-    '蘇昱誠':Sender(name='蘇昱誠',icon_url=image_src['蘇昱誠']),
-    '黃準':Sender(name='黃準',icon_url=image_src['黃準'])
+    '昱誠':Sender(name='昱誠',icon_url=image_src['昱誠']),
+    '黃準':Sender(name='黃準',icon_url=image_src['黃準']),
+    '旁白':Sender(name='旁白',icon_url=image_src['旁白']),
     }
 
 def send(token,type,data,sender_name,reply=None):
+    print('==send==')
     msg=[]
     type_length=len(type)
     type_range=range(type_length)
@@ -33,24 +35,28 @@ def send(token,type,data,sender_name,reply=None):
             if '，' in reply:
                 label=reply.split('，')[0]
 
+    print(sender_name)
+    if not isinstance(sender_name, list):
+        sender_name=[str(sender_name) for i in range(type_length)]
+
     for i in type_range:
         print('i:',i)
         if type[i]=='text':
             if i==type_length-1 and reply:
                 print(1)
-                msg.append(TextSendMessage(text=data[i],sender=sender[sender_name],quick_reply=QuickReply(items=[QuickReplyButton(action=MessageAction(label=label,text=reply))])))
+                msg.append(TextSendMessage(text=data[i],sender=sender[sender_name[i]],quick_reply=QuickReply(items=[QuickReplyButton(action=MessageAction(label=label,text=reply))])))
             else:
                 print(2)
-                msg.append(TextSendMessage(text=data[i],sender=sender[sender_name]))
+                msg.append(TextSendMessage(text=data[i],sender=sender[sender_name[i]]))
 
         elif type[i]=='img':
             print("-------------\n",data[i])
             if i==type_length-1 and reply:
                 print(3)
-                msg.append(ImageSendMessage(original_content_url=image_src['Invitation'],sender=sender[sender_name],preview_image_url=preview_src['Invitation'],quick_reply=QuickReply(items=[QuickReplyButton(action=MessageAction(label=label,text=reply))])))
+                msg.append(ImageSendMessage(original_content_url=image_src[data[i]],sender=sender[sender_name[i]],preview_image_url=preview_src[data[i]],quick_reply=QuickReply(items=[QuickReplyButton(action=MessageAction(label=label,text=reply))])))
             else:
                 print(4)
-                msg.append(ImageSendMessage(original_content_url=image_src[data[i]],sender=sender[sender_name],preview_image_url=preview_src[data[i]]))
+                msg.append(ImageSendMessage(original_content_url=image_src[data[i]],sender=sender[sender_name[i]],preview_image_url=preview_src[data[i]]))
         print(token,len(msg))
         print(token,msg)
     line_bot_api.reply_message(token,msg)
@@ -70,19 +76,21 @@ def msg_process(event):
         times+=1
 
     if times in question_pack:
-        if msg!=question_pack[times]:
+        not (question_pack[times] in msg)
+        if not (question_pack[times] in msg):
             if try_times<6:
-                send(token,['text'],['好像不是他欸'],msg_pack[times][0],None)
+                send(token,['text'],['好像不是欸'],msg_pack[times][0],None)
             else:
-                send(token,['text'],['（還是把每個座位都看一遍好了）'],msg_pack[times][0],msg_pack[times][2])
+                send(token,['text'],['你是不是太笨了，需要幫助嗎'],msg_pack[times][0],msg_pack[times][2])
             try_times+=1
         else:
+            print('correct')
             try_times=0
             times+=1
     print('times:',times)
     if times not in question_pack:
         #正常情況
-        print(msg_pack[times-1][2],msg)
+        print('required:',msg_pack[times-1][2],'|msg:',msg)
         if msg_pack[times-1][2]:
             print(re.match(msg_pack[times-1][2],msg))
         if re.match(msg_pack[times-1][2],msg):
