@@ -17,12 +17,7 @@ app=Flask(__name__)
 line_bot_api = LineBotApi(os.environ['access_token'])
 handler = WebhookHandler(os.environ['Channel_secret'])
 
-sender={
-    '智能助理':Sender(name='智能助理',icon_url=image_src['智能助理']),
-    '昱誠':Sender(name='昱誠',icon_url=image_src['昱誠']),
-    '黃準':Sender(name='黃準',icon_url=image_src['黃準']),
-    '旁白':Sender(name='旁白',icon_url=image_src['旁白']),
-    }
+sender={x:Sender(name=x,icon_url=image_src[x]) for x in ['智能助理','昱誠','黃準','旁白']}
 
 def send(token,type,data,sender_name,reply=None):
     print('==send==')
@@ -81,7 +76,7 @@ def msg_process(event):
             if try_times<6:
                 send(token,['text'],['好像不是欸'],msg_pack[times][0],None)
             else:
-                send(token,['text'],['你是不是太笨了，需要幫助嗎'],msg_pack[times][0],msg_pack[times][2])
+                send(token,['text'],['你是不是太笨了，需要幫助嗎'],msg_pack[times][0],question_pack[times])
             try_times+=1
         else:
             print('correct')
@@ -141,4 +136,4 @@ def callback():
     return 'OK'
 
 if __name__=='__main__':
-    app.run(debug=True,port=8080)
+    app.run(debug=True,port=8080,host='0.0.0.0')
