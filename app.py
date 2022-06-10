@@ -64,43 +64,74 @@ def msg_process(event):
     user_id=event.source.user_id
 
     times=collection.find_one({"type":'user'})
-    try_times=times[user_id][1]
-    times=times[user_id][0]
+    
+    user_set=collection.find_one({"type":'user'})
+    user=user_set[user_id]
+    user_data=user[1]
+    print(user_data,'/////')
+    branch=user_data[0]
+    times=user_data[1]
+    try_times=user_data[2]
+    print(branch,times,try_times)
     
     if times==0 and re.match("開始遊戲",msg):
         times+=1
 
-    if times in question_pack:
-        not (question_pack[times] in msg)
-        if not (question_pack[times] in msg):
-            if try_times<6:
-                send(token,['text'],['好像不是欸'],msg_pack[times][0],None)
+    if branch in question_pack and times in question_pack[branch]:
+        # not (question_pack[branch][times] in msg)
+        if type(question_pack[branch][times]) is list:
+            if not (question_pack[branch][times][0][0] in msg):
+                if not (question_pack[branch][times][1][0] in msg):
+                    if try_times<6:
+                        send(token,['text'],['好像不是欸'],msg_pack[branch][times][0],None)
+                    else:
+                        send(token,['text'],['你是不是太笨了，需要幫助嗎'],msg_pack[branch][times][0],question_pack[branch][times])
+                    try_times+=1
+                else:
+                    print('correct')
+                    try_times=0
+                    times+=1
+                    branch='test'
             else:
-                send(token,['text'],['你是不是太笨了，需要幫助嗎'],msg_pack[times][0],question_pack[times])
-            try_times+=1
+                print('correct')
+                try_times=0
+                times+=1
+                branch='main'
         else:
-            print('correct')
-            try_times=0
-            times+=1
+            if not (question_pack[branch][times] in msg):
+                if try_times<6:
+                    send(token,['text'],['好像不是欸'],msg_pack[branch][times][0],None)
+                else:
+                    send(token,['text'],['你是不是太笨了，需要幫助嗎'],msg_pack[branch][times][0],question_pack[branch][times])
+                try_times+=1
+            else:
+                print('correct')
+                try_times=0
+                times+=1
     print('times:',times)
-    if times not in question_pack:
+    if ((branch  not in question_pack) or (times not in question_pack[branch])):
         #正常情況
-        print('required:',msg_pack[times-1][2],'|msg:',msg)
-        if msg_pack[times-1][2]:
-            print(re.match(msg_pack[times-1][2],msg))
-        if re.match(msg_pack[times-1][2],msg):
-            send(token,msg_type[times],msg_pack[times][1],msg_pack[times][0],msg_pack[times][2])
+        print('required:',msg_pack[branch][times-1][2],'|msg:',msg)
+        if msg_pack[branch][times-1][2]:
+            print(re.match(msg_pack[branch][times-1][2],msg))
+        if re.match(msg_pack[branch][times-1][2],msg):
+            send(token,msg_type[branch][times],msg_pack[branch][times][1],msg_pack[branch][times][0],msg_pack[branch][times][2])
             times+=1
 
-    collection.update({"type":'user'},{"$set":{str(user_id):[times,try_times]}})
+    collection.update({"type":'user'},{"$set":{str(user_id):[[user[0][0]],[branch,times,try_times]]}})
 
 @handler.add(FollowEvent)
 def handle_follow(event):
     message_event_debug(event)
+    token=event.reply_token
     result=collection.find_one({"type":'user'})
     print(result)
     user_id=event.source.user_id
-    collection.update({"type":"user"},{"$set":{str(user_id):[0,0]}})
+    
+    profile=line_bot_api.get_profile(user_id)
+    name=profile.display_name
+    id=profile.user_id
+    collection.update({"type":"user"},{"$set":{str(user_id):[[name],['main',0,0]]}})
 
     button_template_message =ButtonsTemplate(thumbnail_image_url="https://i.imgur.com/64N29wq.png",
         title='來玩場遊戲吧～', 
@@ -109,7 +140,7 @@ def handle_follow(event):
         actions=[MessageTemplateAction(label='開始遊戲', text='開始遊戲'),]
     )
     line_bot_api.reply_message(
-        event.reply_token,[
+        token,[
         TextSendMessage(text="歡迎追蹤～～～～～～～\n須知:這是一場解謎，主要的劇情會通過和機器人互動的過程進行，然後故事中會穿插謎題。然後如果有出現提示回覆的內容，請點擊，不要亂回（可能會造成劇情無法繼續）！！！！！！！\n如果在遊玩的過程中發生問題，可以嘗試將機器人封鎖，再解除封鎖來嘗試觸發",sender=sender['智能助理']),
         TextSendMessage(text="閱讀以上內容後，準備好，就請點擊  “開始遊戲” 享受這一場解密吧～～～",sender=sender['智能助理']),
         TemplateSendMessage(alt_text="err",template=button_template_message,sender=sender['智能助理'])]
