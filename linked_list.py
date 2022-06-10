@@ -14,8 +14,14 @@ class LinkedList():
         print('head',self.head)
         print('tail',self.tail)
         print('tail.next',self.tail.next)
+    def search(self):
+        pass
+    def show_all(self):
+        pointer=self.head
+        for _ in range(self.length):
+            pointer.info()
+            pointer=pointer.next
 
-        
 class Node():
     def __init__(self,id=0,msg=None,quick_reply=None,query=None,next=None):
         self.id=id
@@ -35,7 +41,10 @@ class Node():
 __linkedlist=LinkedList('hh')
 __linkedlist.append('哈哈1')
 __linkedlist.append('哈哈2')
-__linkedlist.head.info()
-__linkedlist.head.next.info()
-__linkedlist.head.next.next.info()
-__linkedlist.info()
+__linkedlist.show_all()
+# __linkedlist.head.info()
+# __linkedlist.head.next.info()
+# __linkedlist.head.next.next.info()
+# __linkedlist.info()
+
+    
