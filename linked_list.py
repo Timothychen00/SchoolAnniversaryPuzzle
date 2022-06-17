@@ -33,12 +33,14 @@ class LinkedList():
         self.length+=1
 
     def find_one(self,value,key='id'):
-        pointer=self.head
-        length=self.length
-        for _ in range(length):
-            if value==pointer.__dict__[key]:
+        queue=[]
+        queue.append(self.head)
+        while queue:
+            pointer=queue[-1]
+            if pointer.__dict__[key]==value:
                 return pointer
-            pointer=pointer.next
+            queue.pop()
+            queue.extend(pointer.next)
         return None
 
     def info(self):
@@ -165,22 +167,5 @@ print('\n'*10)
 __linkedlist2.info()
 print('\n'*10)
 __linkedlist.info()
-
-
-
-# __linkedlist.find(0).info()
-# __linkedlist.info()
-
-# __linkedlist.show_all()
-# __linkedlist.head.info()
-# __linkedlist.head.next.info()
-# __linkedlist.head.next.next.info()
-# __linkedlist.info()
-
-
-# __linkedlist.info()
-# __linkedlist.find(1).info()
-# __linkedlist.find(id,1).info()
-
-
-
+print('\n'*10)
+__linkedlist.find_one(2).info()
