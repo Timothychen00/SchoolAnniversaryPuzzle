@@ -4,7 +4,7 @@ image_src={
     "Q2-1":"https://i.imgur.com/cHEDvaZ.jpg",
     "Q2-2":"https://i.imgur.com/cKmaenR.jpg",
     "Q3":"https://i.imgur.com/Yhcf1k5.jpg",
-    "Q4":"https://i.imgur.com/l3a6hG5.png",
+    "Q4":"https://i.imgur.com/l4laPWH.png",
     'Q5-1-1':"https://i.imgur.com/l8gNHGU.png",
     'Q5-1-2':"https://i.imgur.com/HTwiphg.png",
     'Q5-2':"https://i.imgur.com/pIO57Bs.jpg",
