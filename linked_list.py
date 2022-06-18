@@ -63,17 +63,15 @@ class LinkedList():
 
 
 class Node():
-    def __init__(self,id=0,msg=None,quick_reply=None,query=None,next=None,sender=None,branch=None):
+    def __init__(self,id=0,msg=None,quick_reply=None,query=None,sender=None,next=None,branch=None):
         self.id=id
         self.msg=msg
         self.quick_reply=quick_reply
         self.query=query#請求的內容
         self.next=None#connection point不一定只有一個 可能會有很多個
-        self.quick_reply=quick_reply
         self.sender=sender
-        self.degree=None
         self.isVisit={}#userid
-        self.branch=branch
+        self.branch=branch#這個點所在的主要分支
 
     def info(self):
         print('-'*20)
@@ -83,7 +81,7 @@ class Node():
         print('quick_reply',self.quick_reply)
         print('query:',self.query)
         print('next:',self.next)
-        
+
     def connect(self,*nodes):
         print('nextnext:::',self.next)
         if self.next:
@@ -92,16 +90,14 @@ class Node():
             self.next=[]
             self.next.extend(nodes)
         print(self.next)
-    
+
     def tag(self,user_id):
         self.isVisit.add(user_id)
-        
+
     def walk(self,id):
         if self.next:
             if len(self.next)==1:
                 self=self.next[0]
-            
-            
 
 # class AndGate():
 #     def __init__(self,*lists):
@@ -111,25 +107,20 @@ class Node():
 #             if i.tail.isVisit:
 #                 pass
 
-        
+#branch1
 __linkedlist=LinkedList('hh','\033[94mbranch1\033[0m')
 
 __linkedlist.append('哈哈1','hh','智能助理')
 __linkedlist.append('哈哈2','hh','智能助理')
-
-
 __linkedlist.info()
-# 
-print(__linkedlist.head)
-    
-# __linkedlist.find_one('query',None).info()
 
-# print(type(__linkedlist))
-# __linkedlist.insert_after(1,'哈哈哈3','hh','智能助理')
+#branch2
+__linkedlist2=LinkedList('pp','\033[92mbranch2\033[0m')
+__linkedlist2.append('陳澤榮好欸','確實','智能助理')
 
-# __linkedlist.find_one(3).connect(4,Node('哈哈哈4'),'hh','智能助理')
 
-branches=[__linkedlist]
+branches=[__linkedlist,__linkedlist2]#用於存放不同的分支
+
 class User():
     client = pymongo.MongoClient("mongodb+srv://admin:"+os.environ['DB_PASSWORD']+"@cluster0.wvaw6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
     db = client.linebot
@@ -153,14 +144,6 @@ class User():
     def load(self):
         branches[self.branch].find_one(self.position).tag(self.userId)
         return branches[self.branch].find_one(self.position)
-
-
-
-__linkedlist2=LinkedList('pp','\033[92mbranch2\033[0m')
-__linkedlist2.append('pp1','hh','智能助理')
-__linkedlist2.append('陳澤榮好帥','確實','智能助理')
-__linkedlist2.append('陳澤榮好帥2','確實','智能助理')
-__linkedlist2.append('陳澤榮好帥3','確實','智能助理')
 
 __linkedlist.head.next[0].connect(__linkedlist2.head)
 print('\n'*10)
