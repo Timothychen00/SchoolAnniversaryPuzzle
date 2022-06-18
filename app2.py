@@ -42,9 +42,17 @@ sender={x:Sender(name=x,icon_url=image_src[x]) for x in ['智能助理','昱誠'
 
 @handler.add(MessageEvent,message=TextMessage)
 def msg_process(event):
-    __user=User('Uf7f4867b3a62ac1bf05a26c54ddd3b2e')
+    userId=event.source.user_id
+    msg=event.message.text
+    
+    __user=User(userId)
     __user.info()
-    last_point=__user.load()
+    current_point=__user.load()
+    temp=current_point.next.check(msg)
+    if temp:
+        current_point=temp
+    
+    current_point.info()
 
     
     

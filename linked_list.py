@@ -11,10 +11,11 @@ client = pymongo.MongoClient("mongodb+srv://admin:"+os.environ['DB_PASSWORD']+"@
 db = client.linebot
 collection=db.user
 class LinkedList():
-    def __init__(self,msg,name=None,id=0):
+    def __init__(self,name=None,id=0,msg=None,quick_reply=None,sender=None,query=None):
         self.length=1
         self.name=name
-        self.head=Node(id=id,msg=msg,branch=self.name)
+        self.color=None
+        self.head=Node(id=id,msg=msg,branch=self.name,quick_reply=quick_reply,sender=sender,query=None)
         self.tail=self.head
 
     def append(self,msg,quick_reply,sender):
@@ -44,6 +45,7 @@ class LinkedList():
         return None
 
     def info(self):
+        print('self',self)
         print('head:',self.head)
         print('tail:',self.tail)
         print('length:',self.length)
@@ -94,10 +96,14 @@ class Node():
     def tag(self,user_id):
         self.isVisit.add(user_id)
 
-    def walk(self,id):
-        if self.next:
-            if len(self.next)==1:
-                self=self.next[0]
+    def check(self,msg):
+        if re.search(self.query,msg):
+            return self
+        return None
+        
+        # if self.next:
+        #     if len(self.next)==1:
+        #         self=self.next[0]
 
 # class AndGate():
 #     def __init__(self,*lists):
@@ -108,18 +114,17 @@ class Node():
 #                 pass
 
 #branch1
-__linkedlist=LinkedList('hh','\033[94mbranch1\033[0m')
-
-__linkedlist.append('哈哈1','hh','智能助理')
+# (self,name=None,id=0,msg=None,quick_reply=None,sender=None,query=None):
+__linkedlist=LinkedList('main','叮咚!你收到一封來自母校的邀請函(附圖)','邀請函？是關於什麼的？','智能助理','開始遊戲')
 __linkedlist.append('哈哈2','hh','智能助理')
 __linkedlist.info()
 
 #branch2
-__linkedlist2=LinkedList('pp','\033[92mbranch2\033[0m')
+__linkedlist2=LinkedList('pp','branch2')
 __linkedlist2.append('陳澤榮好欸','確實','智能助理')
 
 
-branches=[__linkedlist,__linkedlist2]#用於存放不同的分支
+branches={'main':__linkedlist,'branch2':__linkedlist2}#用於存放不同的分支
 
 class User():
     client = pymongo.MongoClient("mongodb+srv://admin:"+os.environ['DB_PASSWORD']+"@cluster0.wvaw6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
@@ -142,7 +147,9 @@ class User():
         print('position',self.position)
 
     def load(self):
-        branches[self.branch].find_one(self.position).tag(self.userId)
+        # branches[self.branch].find_one(self.position).tag(self.userId)
+        print('\n'*15)
+        # print(branches[self.branch].find_one(0))
         return branches[self.branch].find_one(self.position)
 
 __linkedlist.head.next[0].connect(__linkedlist2.head)
@@ -151,4 +158,5 @@ __linkedlist2.info()
 print('\n'*10)
 __linkedlist.info()
 print('\n'*10)
-__linkedlist.find_one(2).info()
+# __linkedlist.find_one(2).info()
+print(__linkedlist.find_one(0))
