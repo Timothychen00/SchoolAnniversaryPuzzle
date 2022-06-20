@@ -1,5 +1,4 @@
 import os,random,re,pymongo
-from numpy import packbits
 from dotenv import load_dotenv
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
@@ -36,6 +35,8 @@ class LinkedList():
     def find_one(self,value,key='id'):
         queue=[]
         queue.append(self.head)
+        # if self.head.__dict__[key]==value:
+        #     return self.head
         while queue:
             pointer=queue[-1]
             if pointer.__dict__[key]==value:
@@ -97,13 +98,10 @@ class Node():
         self.isVisit.add(user_id)
 
     def check(self,msg):
-        if re.search(self.query,msg):
+        if not (self.query) or re.search(self.query,msg):
+            #send message
             return self
         return None
-        
-        # if self.next:
-        #     if len(self.next)==1:
-        #         self=self.next[0]
 
 # class AndGate():
 #     def __init__(self,*lists):
@@ -115,7 +113,7 @@ class Node():
 
 #branch1
 # (self,name=None,id=0,msg=None,quick_reply=None,sender=None,query=None):
-__linkedlist=LinkedList('main','叮咚!你收到一封來自母校的邀請函(附圖)','邀請函？是關於什麼的？','智能助理','開始遊戲')
+__linkedlist=LinkedList('main',0,'叮咚!你收到一封來自母校的邀請函(附圖)','邀請函？是關於什麼的？','智能助理','開始遊戲')
 __linkedlist.append('哈哈2','hh','智能助理')
 __linkedlist.info()
 
@@ -131,12 +129,14 @@ class User():
     db = client.linebot
     collection=db.user
 
-    def __init__(self,userId):
+    def __init__(self,userId,event):
         self.user=self.collection.find_one({'type':'user'})[userId]
         self.userId=userId
         self.name=self.user[0][0]
         self.branch=self.user[1][0]
         self.position=self.user[1][1]
+        self.current_point=None
+        self.event=event
 
     def info(self):
         print('-'*20)
@@ -147,10 +147,20 @@ class User():
         print('position',self.position)
 
     def load(self):
-        # branches[self.branch].find_one(self.position).tag(self.userId)
         print('\n'*15)
-        # print(branches[self.branch].find_one(0))
-        return branches[self.branch].find_one(self.position)
+        self.current_point=branches[self.branch].find_one(self.position)
+        return self.current_point
+    
+    def walk(self):
+        next=self.current_point.next[0]
+        if not (next.query) or re.search(next.query,self.event.message.text):
+            self.current_point=next
+            return next
+        return None
+    
+    
+    def reply(self):
+        pass
 
 __linkedlist.head.next[0].connect(__linkedlist2.head)
 print('\n'*10)

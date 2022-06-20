@@ -48,7 +48,7 @@ def msg_process(event):
     __user=User(userId)
     __user.info()
     current_point=__user.load()
-    temp=current_point.next.check(msg)
+    temp=current_point.next[0].check(msg)
     if temp:
         current_point=temp
     
