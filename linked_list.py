@@ -4,8 +4,10 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage,ImageSendMessage,FollowEvent,UnfollowEvent,ButtonsTemplate,MessageTemplateAction,TemplateSendMessage,MessageAction,QuickReply,QuickReplyButton,Sender
 from flask import Flask,request,abort
-
 load_dotenv()
+line_bot_api = LineBotApi(os.environ['access_token'])
+handler = WebhookHandler(os.environ['Channel_secret'])
+
 client = pymongo.MongoClient("mongodb+srv://admin:"+os.environ['DB_PASSWORD']+"@cluster0.wvaw6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 db = client.linebot
 collection=db.user
@@ -129,20 +131,21 @@ class User():
     db = client.linebot
     collection=db.user
 
-    def __init__(self,userId,event):
-        self.user=self.collection.find_one({'type':'user'})[userId]
-        self.userId=userId
+    def __init__(self,event):
+        self.event=event
+        self.user_id=self.event.source.user_id
+        self.user=self.collection.find_one({'type':'user'})[self.userId]
         self.name=self.user[0][0]
         self.branch=self.user[1][0]
         self.position=self.user[1][1]
         self.current_point=None
-        self.event=event
+        self.msg=self.message.text
 
     def info(self):
         print('-'*20)
         print('obj:',self)
         print('name',self.name)
-        print('userId',self.userId)
+        print('userId',self.user_id)
         print('branch',self.branch)
         print('position',self.position)
 
@@ -151,13 +154,23 @@ class User():
         self.current_point=branches[self.branch].find_one(self.position)
         return self.current_point
     
+    def save(self):
+        pass
+
+    def delete(self):
+        self.collection.update({"type":"user"},{"$unset":{str(self.user_id):""}})
+        print('data deleted')
+    
+    def create(self,id,name):
+        self.collection.update({"type":"user"},{"$set":{str(id):[[name],['main',0,{}]]}})
+        print('user created')
+    
     def walk(self):
         next=self.current_point.next[0]
         if not (next.query) or re.search(next.query,self.event.message.text):
             self.current_point=next
             return next
         return None
-    
     
     def reply(self):
         pass

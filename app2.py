@@ -14,8 +14,6 @@ collection=db.user
 
 app=Flask(__name__)
 
-line_bot_api = LineBotApi(os.environ['access_token'])
-handler = WebhookHandler(os.environ['Channel_secret'])
 
 image_src={
     "Q1-1":'https://i.imgur.com/CzIXYh6.png',
@@ -42,15 +40,15 @@ sender={x:Sender(name=x,icon_url=image_src[x]) for x in ['智能助理','昱誠'
 
 @handler.add(MessageEvent,message=TextMessage)
 def msg_process(event):
-    userId=event.source.user_id
     msg=event.message.text
     
-    __user=User(userId)
+    __user=User(event)
     __user.info()
     current_point=__user.load()
     temp=current_point.next[0].check(msg)
     if temp:
         current_point=temp
+        __user.reply()
     
     current_point.info()
 
