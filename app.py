@@ -17,41 +17,46 @@ app=Flask(__name__)
 line_bot_api = LineBotApi(os.environ['access_token'])
 handler = WebhookHandler(os.environ['Channel_secret'])
 
-sender={x:Sender(name=x,icon_url=image_src[x]) for x in ['智能助理','昱誠','黃準','旁白']}
+sender={x:Sender(name=x,icon_url=image_src[x]) for x in ['智能助理','阿豆','昱誠','黃準','旁白','觀眾','阿嘟','熱音社社員','司儀','吉他社社員','小傑']}
 
-def send(token,type,data,sender_name,reply=None):
+def send(token,data,sender_name,reply=None):
     print('==send==')
     msg=[]
-    type_length=len(type)
-    type_range=range(type_length)
+    msg_length=len(data)
+    msg_range=range(msg_length)
     label=reply
     if reply:
         if len(reply)>6:
             if '，' in reply:
                 label=reply.split('，')[0]
-
+            elif '！' in reply:
+                label=reply.split('！')[0]
+            elif '？' in reply:
+                label=reply.split('？')[0]
     print(sender_name)
     if not isinstance(sender_name, list):
-        sender_name=[str(sender_name) for i in range(type_length)]
+        sender_name=[str(sender_name) for i in range(len(data))]
 
-    for i in type_range:
+    print(data)
+    for i in msg_range:
         print('i:',i)
-        if type[i]=='text':
-            if i==type_length-1 and reply:
-                print(1)
-                msg.append(TextSendMessage(text=data[i],sender=sender[sender_name[i]],quick_reply=QuickReply(items=[QuickReplyButton(action=MessageAction(label=label,text=reply))])))
-            else:
-                print(2)
-                msg.append(TextSendMessage(text=data[i],sender=sender[sender_name[i]]))
-
-        elif type[i]=='img':
+        if 'img:' in data[i]:
+            data[i]=data[i].split('img:')[-1]
             print("-------------\n",data[i])
-            if i==type_length-1 and reply:
+            if i==msg_length-1 and reply:
                 print(3)
                 msg.append(ImageSendMessage(original_content_url=image_src[data[i]],sender=sender[sender_name[i]],preview_image_url=preview_src[data[i]],quick_reply=QuickReply(items=[QuickReplyButton(action=MessageAction(label=label,text=reply))])))
             else:
                 print(4)
                 msg.append(ImageSendMessage(original_content_url=image_src[data[i]],sender=sender[sender_name[i]],preview_image_url=preview_src[data[i]]))
+        else:
+            if i==msg_length-1 and reply:
+                print(1)
+                print(data[i])
+                msg.append(TextSendMessage(text=data[i],sender=sender[sender_name[i]],quick_reply=QuickReply(items=[QuickReplyButton(action=MessageAction(label=label,text=reply))])))
+            else:
+                print(2)
+                msg.append(TextSendMessage(text=data[i],sender=sender[sender_name[i]]))
         print(token,len(msg))
         print(token,msg)
     line_bot_api.reply_message(token,msg)
@@ -63,9 +68,9 @@ def msg_process(event):
     msg=event.message.text
     user_id=event.source.user_id
 
-    times=collection.find_one({"type":'user'})
+    times=collection.find_one({"type":'user1'})
     
-    user_set=collection.find_one({"type":'user'})
+    user_set=collection.find_one({"type":'user1'})
     user=user_set[user_id]
     user_data=user[1]
     print(user_data,'/////')
@@ -115,23 +120,23 @@ def msg_process(event):
         if msg_pack[branch][times-1][2]:
             print(re.match(msg_pack[branch][times-1][2],msg))
         if re.match(msg_pack[branch][times-1][2],msg):
-            send(token,msg_type[branch][times],msg_pack[branch][times][1],msg_pack[branch][times][0],msg_pack[branch][times][2])
+            send(token,msg_pack[branch][times][1],msg_pack[branch][times][0],msg_pack[branch][times][2])
             times+=1
 
-    collection.update({"type":'user'},{"$set":{str(user_id):[[user[0][0]],[branch,times,try_times]]}})
+    collection.update({"type":'user1'},{"$set":{str(user_id):[[user[0][0]],[branch,times,try_times]]}})
 
 @handler.add(FollowEvent)
 def handle_follow(event):
     message_event_debug(event)
     token=event.reply_token
-    result=collection.find_one({"type":'user'})
+    result=collection.find_one({"type":'user1'})
     print(result)
     user_id=event.source.user_id
     
     profile=line_bot_api.get_profile(user_id)
     name=profile.display_name
     id=profile.user_id
-    collection.update({"type":"user"},{"$set":{str(user_id):[[name],['main',0,0]]}})
+    collection.update({"type":"user1"},{"$set":{str(user_id):[[name],['main',0,0]]}})
 
     button_template_message =ButtonsTemplate(thumbnail_image_url="https://i.imgur.com/64N29wq.png",
         title='來玩場遊戲吧～', 
@@ -149,7 +154,7 @@ def handle_follow(event):
 @handler.add(UnfollowEvent)
 def handle_unfollow(event):
     user_id=event.source.user_id
-    collection.update({"type":"user"},{"$unset":{str(user_id):""}})
+    collection.update({"type":"user1"},{"$unset":{str(user_id):""}})
 
 @app.route('/')
 def home():
