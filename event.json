@@ -3,12 +3,12 @@
         "isRedelivery": false
     },
      "mode": "active",
-     "replyToken": "762dca10071a4a1dacdcbd99e2158278",
+     "replyToken": "b47609438ad740699ca52339df2264c0",
      "source": {
         "type": "user",
          "userId": "U6feaa10ddbb90decf621c4feb49e351c"
     },
-     "timestamp": 1656582750439,
+     "timestamp": 1656583201854,
      "type": "follow",
-     "webhookEventId": "01G6T0DGK55BXAYYY80X63DX04"
+     "webhookEventId": "01G6T0V93DD5HBJ7FSBGACQY7Q"
 }
