@@ -49,7 +49,8 @@ def send(token,data,sender_name,reply=None,username=None):
     for i in msg_range:
         print('i:',i)
         if 'img:' in data[i]:
-            data[i]=data[i].split('img:')[-1]
+            # data[i]=data[i].split('img:')[-1]
+            temp_data=data[i].split('img:')[-1]
             print("-------------\n",data[i])
             if i==msg_length-1 and reply:
                 print(3)
@@ -59,10 +60,10 @@ def send(token,data,sender_name,reply=None,username=None):
                 if len(actions)==1:
                     actions=actions[0]
                 print(actions)
-                msg.append(ImageSendMessage(original_content_url=image_src[data[i]],sender=sender[sender_name[i]],preview_image_url=preview_src[data[i]],quick_reply=QuickReply(items=[QuickReplyButton(action=actions)])))
+                msg.append(ImageSendMessage(original_content_url=image_src[temp_data],sender=sender[sender_name[i]],preview_image_url=preview_src[temp_data],quick_reply=QuickReply(items=[QuickReplyButton(action=actions)])))
             else:
                 print(4)
-                msg.append(ImageSendMessage(original_content_url=image_src[data[i]],sender=sender[sender_name[i]],preview_image_url=preview_src[data[i]]))
+                msg.append(ImageSendMessage(original_content_url=image_src[temp_data],sender=sender[sender_name[i]],preview_image_url=preview_src[temp_data]))
         else:# for x in label
             temp_data=data[i]
             if 'ID' in data[i]:
