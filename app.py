@@ -8,7 +8,7 @@ from debug_tool import message_event_debug
 from data import *
 
 load_dotenv()
-client = pymongo.MongoClient("mongodb+srv://admin:"+os.environ['DB_PASSWORD']+"@cluster0.wvaw6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+client = pymongo.MongoClient(os.environ['DB_STRING'])
 db = client.linebot
 collection=db.user
 
